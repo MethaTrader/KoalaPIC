@@ -31,3 +31,4 @@
 - [@Moqu3f](https://github.com/Moqu3f)
 - [@zetatul](https://github.com/zetatul)
 - [@dezmond338](https://github.com/dezmond338)
+- [@naumenkoanatoly](https://github.com/naumenkoanatoly)
