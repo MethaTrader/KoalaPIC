@@ -22,6 +22,12 @@ docker run -p 5000:80 koalapic
 
 3) Go to http://localhost:5000/
 
+
+### Docker compose
+```bash
+docker compose up
+```
+
 ## API Reference
 
 #### Генерація зображення
