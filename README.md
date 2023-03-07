@@ -8,6 +8,19 @@
 
 ![alt text](https://i.imgur.com/uVsnq6b.png)
 
+# Setup
+
+1) Docker Build
+```bash
+docker build -t koalapic . 
+```
+
+2) Run Docker
+```bash
+docker run -p 5000:80 koalapic
+```
+
+3) Go to http://localhost:5000/
 
 ## API Reference
 
