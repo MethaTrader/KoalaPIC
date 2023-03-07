@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 80
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=app_db
+      - DB_USER=root
+      - DB_PASSWORD=my-secret-pw
+    volumes:
+      - ./app:/app
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_DATABASE=app_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=my-secret-pw
+    volumes:
+      - db-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+
+volumes:
+  db-data:
