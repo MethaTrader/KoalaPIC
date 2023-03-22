@@ -1,39 +1,44 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  app:
-    build: .
-    command: uvicorn main:app --host 0.0.0.0 --port 80
-    ports:
-      - "8000:80"
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_NAME=app_db
-      - DB_USER=root
-      - DB_PASSWORD=my-secret-pw
-    volumes:
-      - ./app:/app
   db:
-    image: mariadb:10.6
-    restart: always
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_DATABASE=app_db
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=my-secret-pw
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpass
     volumes:
       - db-data:/var/lib/mysql
+    networks:
+      - backend
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8080:80"
+    image: phpmyadmin/phpmyadmin:latest
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: my-secret-pw
+      PMA_USER: user
+      PMA_PASSWORD: userpass
+    ports:
+      - 8089:80
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  flyway:
+    image: flyway/flyway:latest
+    volumes:
+      - ./migrations:/flyway/sql
+    depends_on:
+      - db
+    command: -url=jdbc:mysql://db:3306/mydb -user=user -password=userpass migrate
+    networks:
+      - backend
 
 volumes:
   db-data:
+
+networks:
+  backend:
