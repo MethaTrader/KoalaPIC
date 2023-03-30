@@ -1,8 +1,10 @@
 
-# KoalaPIC Web-додаток для генерації зображень з тексту
+# KoalaPIC Web application for generating images from text
 
-Цей проект містить веб-додаток для генерації зображень з введеного користувачем тексту. Ви можете використовувати цей додаток, щоб створювати графічні зображення для ваших соціальних мереж, блогів, сайтів та інших проектів.
+Ukrainian Version README.md
+[![Ukrainian Version](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/MethaTrader/KoalaPIC/blob/main/README_UA.md)
 
+This project contains a web application for generating images from user-entered text. You can use this application to create graphic images for your social media, blogs, websites, and other projects.
 
 
 
@@ -30,21 +32,24 @@ docker compose up
 
 ## API Reference
 
-#### Генерація зображення
+#### Image generation
 
 ```http
   GET /api/generate
 ```
 
-| Параметр | Тип     | Опис                |
+| Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Обов'язкове**. Ваш API ключ |
-| `prompt` | `string` | **Обов'язкове**. Ваш текст  |
+| `api_key` | `string` | **Required**. Your API key |
+| `prompt`  | `string` | **Required**. Your text    |
 
 
-Результатом буде URL-посилання на згенероване зображення.
+The result will be a URL link to the generated image.
 
-## Розробники
+To access the full information and functionality of the server go to
+http://localhost:5000/docs
+
+## Developers
 
 - [@MethaTrader](https://www.github.com/MethaTrader)
 - [@Moqu3f](https://github.com/Moqu3f)
