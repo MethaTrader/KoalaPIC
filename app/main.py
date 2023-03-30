@@ -2,7 +2,10 @@ from typing import Union
 
 from fastapi import FastAPI, HTTPException
 import openai
+import os
 app = FastAPI()
+
+TOKEN = os.environ['OPENAI_API_KEY']
 
 def validate_params(token: str, prompt: str):
     if not token:
@@ -20,9 +23,9 @@ def read_root():
 
 
 @app.post("/generate")
-async def generate(token: str = None, prompt: str = None):
-    validate_params(token, prompt)
-    openai.api_key = token
+async def generate(prompt: str = None):
+    validate_params(TOKEN, prompt)
+    openai.api_key = TOKEN
     image_resp = openai.Image.create(prompt=prompt, n=1, size="512x512")
 
     generated_image_url = image_resp['data'][0]['url']
