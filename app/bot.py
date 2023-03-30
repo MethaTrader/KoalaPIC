@@ -5,6 +5,7 @@ import os
 # set up OpenAI API credentials
 openai.api_key = os.environ['OPENAI_API_KEY']
 BOT_TOKEN = os.environ['BOT_TOKEN']
+request_count = {}
 
 
 # define a function to generate an image based on user input
@@ -22,6 +23,11 @@ async def start(update, context):
 
 
 async def echo(update, context):
+    user_id = update.effective_user.id
+    if user_id in request_count and request_count[user_id] >= 10:
+        update.message.reply_text("Вибачте, але ви дуже навантажуєте Коалу, спробуйте трохи пізніше.")
+        return
+
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Зачекай, я генерую зображення...")
 
@@ -35,6 +41,8 @@ async def echo(update, context):
     except:
         await context.bot.send_message(chat_id=update.message.chat_id,
                                        text="Ви написали некорректний опис вашого зображення. Спробуйте ще раз.")
+    finally:
+        request_count[user_id] = request_count.get(user_id, 0) + 1
 
 
 def main() -> None:
@@ -47,6 +55,8 @@ def main() -> None:
 
     # on non command i.e message - echo the message on Telegram
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+    print("Bot started")
 
     # Run the bot until the user presses Ctrl-C
     application.run_polling()
