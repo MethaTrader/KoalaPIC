@@ -1,8 +1,10 @@
 
 # KoalaPIC Web application for generating images from text
 
-This project contains a web application for generating images from user-entered text. You can use this application to create graphic images for your social media, blogs, websites, and other projects.
+Ukrainian Version README.md
+[![Ukrainian Version](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/MethaTrader/KoalaPIC/blob/main/README_UA.md)
 
+This project contains a web application for generating images from user-entered text. You can use this application to create graphic images for your social media, blogs, websites, and other projects.
 
 
 
