@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY . /app
 
 # Запускаємо додаток
-CMD ["uvicorn", "app.bot:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["python", "app/bot.py"]
