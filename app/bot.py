@@ -3,8 +3,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 import os
 
 # set up OpenAI API credentials
-openai.api_key = os.environ['OPENAI_API_KEY']
-BOT_TOKEN = os.environ['BOT_TOKEN']
+openai.api_key = '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'
+BOT_TOKEN = '5904870083:AAGI9g8vncM3-ngAj-OIKyAUPxeyk0_djXw'
 request_count = {}
 
 
