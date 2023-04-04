@@ -3,7 +3,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 import os
 
 # set up OpenAI API credentials
-openai.api_key = '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'
+openai.api_key = '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'
 BOT_TOKEN = '5904870083:AAGI9g8vncM3-ngAj-OIKyAUPxeyk0_djXw'
 request_count = {}
 
@@ -32,18 +32,15 @@ async def echo(update, context):
                                    text="Зачекай, я генерую зображення...")
 
     print("New Message:" + update.message.text)
-    try:
-        # generate the image based on the user's message
-        generated_image_url = generate_image(update.message.text)
-        # send the generated image back to the user
-        await context.bot.send_photo(chat_id=update.effective_chat.id, photo=generated_image_url)
-        await context.bot.send_message(chat_id=update.message.chat_id,
-                                       text="Якщо хочете ще зображень, просто пишіть мені нове повідомлення")
-    except:
-        await context.bot.send_message(chat_id=update.message.chat_id,
-                                       text="Ви написали некорректний опис вашого зображення. Спробуйте ще раз.")
-    finally:
-        request_count[user_id] = request_count.get(user_id, 0) + 1
+
+    # generate the image based on the user's message
+    generated_image_url = generate_image(update.message.text)
+    # send the generated image back to the user
+    await context.bot.send_photo(chat_id=update.effective_chat.id, photo=generated_image_url)
+    await context.bot.send_message(chat_id=update.message.chat_id,
+                                   text="Якщо хочете ще зображень, просто пишіть мені нове повідомлення")
+
+
 
 
 def main() -> None:
