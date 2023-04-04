@@ -31,6 +31,7 @@ async def echo(update, context):
     await context.bot.send_message(chat_id=update.effective_chat.id,
                                    text="Зачекай, я генерую зображення...")
 
+    print("New Message:" + update.message.text)
     try:
         # generate the image based on the user's message
         generated_image_url = generate_image(update.message.text)
