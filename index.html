@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dist/css/style.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+          integrity="sha384-KuTukTAd0hDQOyVY2sg0Dm7z6ofbv1+SVPhY6F+wFN6wyPvXo63+uG1E6YIVpD/w"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="dist/css/all.min.css">
+    <title>KoalaPIC</title>
+    <script src="dist/js/vue.js"></script>
+</head>
+<body>
+<div class="container-fluid" id="app">
+    <div class="row">
+        <div class="col-md-2 sidebar d-flex flex-column justify-content-between">
+            <div>
+                <div class="logo-container">
+                    <img src="dist/images/KoalaPIC-logo.png" alt="Логотип" class="logo">
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#"><i class="fa-regular fa-comment icon text-primary"></i> Chat</a>
+                    <a class="nav-link" href="#"><i class="fa-solid fa-photo-film icon text-primary"></i> My Images</a>
+                    <a class="nav-link" href="#"><i class="fa-sharp fa-regular fa-circle-question icon text-primary"></i> About</a>
+                </nav>
+            </div>
+
+            <div class="d-grid p-3 gap-2">
+                <button class="btn btn-light" @click="clearChat">New chat</button>
+                <button class="btn btn-success">Upgrade to PRO</button>
+            </div>
+        </div>
+
+        <div class="col-md-10 main-content">
+            <h3 class="text-light px-5">Chat</h3>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="chat-block d-flex flex-column gap-4" ref="messagesContainer">
+                            <div v-for="(message, index) in messages" :key="index" :class="{ 'message': true, 'is-my': message.isMy, 'bg-danger': message.isError }">
+                                <img src="dist/images/koala-logo.png" class="koala-logo-message" width="64" alt="" v-show="!message.isMy">
+                                <div class="message-block text-light">
+                                    <p class="message-text">{{ message.text }}</p>
+                                </div>
+
+                                <div class="image-block text-center" v-show="!message.isMy && message.imageUrl">
+                                    <img v-bind:src="message.imageUrl" alt="generated">
+                                </div>
+
+                                <div class="buttons d-flex flex-column gap-2" v-show="!message.isMy">
+                                    <div class="btn btn-outline-light" v-show="!message.isMy" @click="exportImage(message.imageUrl)">Export</div>
+                                    <div class="btn btn-outline-light" v-show="!message.isMy" @click="createVariation(message.prompt)">Create variation</div>
+                                </div>
+
+                            </div>
+
+                            <input class="prompt-input" type="text" id="prompt-input" placeholder="Your prompt" v-model="prompt" @keyup.enter="addMessage">
+                        </div>
+                    </div>
+                    <div class="col-md-2" style="height: 100%">
+                        <div class="d-flex flex-column justify-content-center align-items-center align-content-center gap-2">
+                            <h3 class="text-light">History</h3>
+
+                            <div class="history-item" v-for="(chat, index) in savedChats" :key="index" @click="selectChat(index)">
+                                <img :src="chat.imageUrl" alt="NewChat" width="128">
+                                <p>{{ chat.timestamp }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            messages: [],
+            prompt: '',
+            isWaitingForResponse: false,
+            savedChats: JSON.parse(localStorage.getItem('savedChats')) || [],
+            currentChatIndex: 0
+        },
+
+
+        created() {
+            this.loadChatMessages();
+        },
+
+        methods: {
+
+            saveChatMessages() {
+                const imageUrl = this.messages.find(message => message.imageUrl)?.imageUrl;
+                if (!imageUrl) {
+                    return;
+                }
+
+                this.$set(this.savedChats, this.currentChatIndex, {
+                    messages: this.messages,
+                    imageUrl,
+                    timestamp: new Date().toLocaleString()
+                });
+
+                localStorage.setItem('savedChats', JSON.stringify(this.savedChats));
+            },
+
+
+            loadChatMessages() {
+                if (this.savedChats[this.currentChatIndex]) {
+                    this.messages = this.savedChats[this.currentChatIndex].messages;
+                } else {
+                    this.messages = [];
+                }
+            },
+
+            selectChat(index) {
+                this.currentChatIndex = index;
+                this.loadChatMessages();
+            },
+
+
+            clearChat() {
+                if (this.savedChats.length < 5) {
+                    this.currentChatIndex = this.savedChats.length;
+                } else {
+                    this.currentChatIndex = this.savedChats.length - 1;
+                    this.savedChats.shift();
+                }
+                this.messages = [];
+                this.saveChatMessages();
+            },
+
+            async generateImage(prompt) {
+                try {
+                    const response = await axios.post('/api/generate', {
+                        prompt,
+                        size: 'small',
+                    });
+
+                    return response.data.data;
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+            },
+            async addMessage() {
+                if (this.prompt.trim() === "" || this.isWaitingForResponse) {
+                    this.messages.push({
+                        text: "You cannot send a new message while waiting for a response.",
+                        isMy: false,
+                        isError: true,
+                    });
+                    return;
+                }
+
+                this.isWaitingForResponse = true;
+                this.messages.push({
+                    text: this.prompt,
+                    isMy: true,
+                    prompt: this.prompt, // Используйте 'prompt' вместо 'originalPrompt'
+                });
+
+                const imageUrl = await this.generateImage(this.prompt);
+
+                if (imageUrl) {
+                    this.messages.push({
+                        text: `I generated ${this.prompt}`,
+                        isMy: false,
+                        imageUrl,
+                        prompt: this.prompt, // Добавьте это свойство
+                    });
+                    this.saveChatMessages();
+                } else {
+                    this.messages.push({
+                        text: "An error occurred while generating the image.",
+                        isMy: false,
+                    });
+                }
+
+                this.isWaitingForResponse = false;
+                this.prompt = "";
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
+
+            scrollToBottom() {
+                const messagesContainer = this.$refs.messagesContainer;
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            },
+
+            exportImage(imageUrl) {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = 'generated-image.png';
+                link.click();
+            },
+            async createVariation(originalPrompt) {
+                if (this.isWaitingForResponse) {
+                    this.messages.push({
+                        text: "Please wait for a response before generating a new variation.",
+                        isMy: false,
+                    });
+                    return;
+                }
+                this.isWaitingForResponse = true;
+
+                this.messages.push({
+                    text: `Regenerate ${originalPrompt}`,
+                    isMy: true,
+                });
+
+                const imageUrl = await this.generateImage(originalPrompt);
+
+                if (imageUrl) {
+                    this.messages.push({
+                        text: `I generated ${this.prompt}`,
+                        isMy: false,
+                        imageUrl,
+                    });
+                    this.saveChatMessages();
+                } else {
+                    this.messages.push({
+                        text: "An error occurred while generating the variation.",
+                        isMy: false,
+                    });
+                }
+                this.isWaitingForResponse = false;
+                this.$nextTick(() => {
+                    this.scrollToBottom();
+                });
+            },
+        },
+    });
+
+</script>
+
+
+</body>
+</html>

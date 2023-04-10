@@ -1,0 +1,155 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&display=swap');
+
+// Определяем переменные
+$primary-color: #02c173;
+$secondary-color: #6c757d;
+$font-size: 16px;
+
+// Определяем стили для основных элементов страницы
+body {
+    background-color: #242627;
+    font-size: $font-size;
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+
+    &:hover{
+        color: $primary-color;
+    }
+}
+
+button {
+    background-color: $secondary-color;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: #fff;
+
+    &:hover {
+        background-color: darken($secondary-color, 10%);
+    }
+}
+
+.sidebar {
+    position: fixed;
+    background-color: #141718;
+    min-height: 100vh;
+}
+
+.logo {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+.nav-link {
+    font-size: 1.5em;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #141718;
+    &:hover, &.active {
+        background-color: #323337;
+        color: $primary-color;
+    }
+}
+
+.icon {
+    &:before {
+        margin-right: 20px;
+    }
+}
+
+.text-primary {
+    color: $primary-color!important;
+}
+
+.chat-block {
+    padding: 20px;
+    margin-bottom: 50px
+}
+
+.history-item {
+    padding: 5px;
+    transition: 200ms ease-in-out;
+    border-left: 3px solid rgba(0, 0, 0, 0);
+    &:hover {
+        cursor: pointer;
+        border-left: 3px solid #868686;
+    }
+}
+
+.message {
+    border-radius: 25px;
+    background-color: #141718;
+    padding: 50px;
+    box-shadow: 5px 5px 5px #1d1d1d;
+    margin-bottom: 20px;
+
+    &.is-my {
+        text-align: right;
+        padding: 20px;
+        background-color: $primary-color;
+        color: white;
+        float: right;
+    }
+}
+
+.message {
+    position: relative;
+}
+
+.koala-logo-message {
+
+    position: absolute;
+    bottom: -15px;
+    left: -15px;
+}
+
+.buttons {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+}
+
+.message-text {
+    font-size: 2em;
+}
+
+.prompt-input {
+    position: fixed;
+    background-color: #141718;
+    width: 55%;
+    bottom: 20px;
+    padding: 20px;
+    font-size: 2em;
+    color: #686868;
+    text-indent: 20px;
+    border: 2px solid #444444;
+    outline: none;
+    border-radius: 20px;
+}
+
+.text-lime {
+    color: lime!important;
+}
+
+.text-purple {
+    color: purple!important;
+}
+
+.text-yellow {
+    color:yellow!important;
+}
+
+.main-content {
+    margin-left: 470px;
+    background-color: #242627;
+    padding: 20px;
+}
