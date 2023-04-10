@@ -1,11 +1,12 @@
 
 # KoalaPIC Web application for generating images from text
 
+![alt text](screenshot.jpeg)
+
 Ukrainian Version README.md
 [![Ukrainian Version](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/MethaTrader/KoalaPIC/blob/main/README_UA.md)
 
 This project contains a web application for generating images from user-entered text. You can use this application to create graphic images for your social media, blogs, websites, and other projects.
-
 
 
 ![alt text](https://i.imgur.com/uVsnq6b.png)
@@ -40,14 +41,10 @@ docker compose up
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
 | `prompt`  | `string` | **Required**. Your text    |
 
 
 The result will be a URL link to the generated image.
-
-To access the full information and functionality of the server go to
-http://localhost:5000/docs
 
 ## Developers
 
